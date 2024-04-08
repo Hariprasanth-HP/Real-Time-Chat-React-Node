@@ -1,0 +1,25 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.myDiv {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.button1:hover {
+  background-color: green !important;
+}
+
+.button2:focus {
+  background-color: yellow !important;
+  color: black;
+}
+
+.button3:active {
+  background-color: red !important;
+}
