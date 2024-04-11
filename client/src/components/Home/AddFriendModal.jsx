@@ -6,13 +6,13 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@chakra-ui/modal";
-import { Button, ModalOverlay, Heading } from "@chakra-ui/react";
+import { Button, Heading, ModalOverlay } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import TextField from "../TextField";
-import * as Yup from "yup";
 import { useCallback, useContext, useState } from "react";
 import socket from "../../socket";
+import TextField from "../TextField";
 import { FriendContext } from "./Home";
+import * as Yup from "yup";
 
 const friendSchema = Yup.object({
   friendName: Yup.string()
@@ -21,15 +21,14 @@ const friendSchema = Yup.object({
     .max(28, "Invalid username!"),
 });
 const AddFriendModal = ({ isOpen, onClose }) => {
-  const [error, setError] = useState(null);
-  const { setFriendList } = useContext(FriendContext);
+  const [error, setError] = useState("");
   const closeModal = useCallback(() => {
+    setError("");
     onClose();
-    setError(null);
-  }, []);
-
+  }, [onClose]);
+  const { setFriendList } = useContext(FriendContext);
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Add a friend!</ModalHeader>
@@ -40,14 +39,14 @@ const AddFriendModal = ({ isOpen, onClose }) => {
             socket.emit(
               "add_friend",
               values.friendName,
-              ({ done, errorMsg }) => {
+              ({ errorMsg, done, newFriend }) => {
+                console.log("newFriendnewFriend", newFriend, done);
                 if (done) {
-                  setFriendList((frd) => [...frd, values.friendName]);
+                  setFriendList((c) => [newFriend, ...c]);
                   closeModal();
                   return;
-                } else {
-                  setError(errorMsg);
                 }
+                setError(errorMsg);
               }
             );
           }}

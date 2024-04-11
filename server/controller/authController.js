@@ -2,7 +2,6 @@ const pool = require("../db");
 const bcrypt = require("bcrypt");
 const { v4: uuid } = require("uuid");
 module.exports.validateSession = async (req, res) => {
-  console.log("req.session", req.session);
   if (req.session.user && req.session.user.username) {
     res.json({ loggedIn: true, username: req.session.user.username });
   } else {

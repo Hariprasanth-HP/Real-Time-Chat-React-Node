@@ -5,10 +5,12 @@ import Sidebar from "./Sidebar";
 import useSocketHook from "./useSocketHook";
 
 export const FriendContext = createContext();
+export const MessageContext = createContext();
 
 const Home = () => {
   const [friendList, setFriendList] = useState([]);
-  useSocketHook(setFriendList);
+  const [messages, setMessages] = useState([]);
+  useSocketHook(setFriendList, setMessages);
   return (
     <FriendContext.Provider value={{ friendList, setFriendList }}>
       <Grid templateColumns="repeat(10, 1fr)" h="100vh" as={Tabs}>
@@ -16,7 +18,9 @@ const Home = () => {
           <Sidebar />
         </GridItem>
         <GridItem colSpan="7">
-          <Chat />
+          <MessageContext.Provider value={{ messages, setMessages }}>
+            <Chat />
+          </MessageContext.Provider>
         </GridItem>
       </Grid>
     </FriendContext.Provider>

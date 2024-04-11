@@ -15,7 +15,8 @@ const {
 const {
   authoriseSocket,
   addFriend,
-  initializeuser,
+  initializeUser,
+  onDisconnect,
 } = require("./controller/socketcontroller");
 
 require("dotenv").config();
@@ -29,21 +30,16 @@ app.use(sessionMiddleware);
 io.use(wrap(sessionMiddleware));
 io.use(authoriseSocket);
 app.use("/auth", router);
-// io.on("connect", (socket) => {
-//   console.log("socket", socket.id, socket.request.session.user);
-//   initializeuser(socket);
-//   socket.on("add_friend", (friendName, cb) =>
-//     addFriend(socket, friendName, cb)
-//   );
-// });
 io.on("connect", (socket) => {
-  console.log("ioooo connected");
-  initializeuser(socket);
+  initializeUser(socket);
 
   socket.on("add_friend", (friendName, cb) => {
     addFriend(socket, friendName, cb);
   });
+
+  socket.on("disconnecting", () => onDisconnect(socket));
 });
+
 server.listen(5000, () => {
-  console.log("server is listening");
+  console.log("server is listening at port 5000");
 });
